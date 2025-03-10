@@ -1,5 +1,5 @@
 [project]
-name = "cloud-info-sys"
+name = "cloud-info-api"
 version = "0.1.0"
 description = "A cloud info API implementation"
 readme = "README.md"

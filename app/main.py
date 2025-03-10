@@ -8,7 +8,7 @@ needed by IM
 import asyncio
 from contextlib import asynccontextmanager
 
-from app.glue import SiteStore, VOStore
+from app.glue import S3SiteStore, VOStore
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from pydantic_settings import BaseSettings
@@ -34,15 +34,19 @@ class Project(BaseModel):
 
 
 class Settings(BaseSettings):
-    appdb_images_file: str = "appdb-images.json"
+    appdb_images_file: str = "data/appdb-images.json"
     ops_portal_url: str = "https://operations-portal.egi.eu/api/vo-list/json"
     ops_portal_token: str = ""
     cloud_info_dir: str = "cloud-info"
+    s3_url: str = (
+        "https://stratus-stor.ncg.ingrid.pt:8080/swift/v1/"
+        "AUTH_bd5a81e1670b48f18af33b05512a9d77/cloud-info/"
+    )
 
 
 settings = Settings()
-site_store = SiteStore(settings.appdb_images_file, settings.cloud_info_dir)
-vo_store = VOStore(settings.ops_portal_url, settings.ops_portal_token)
+site_store = S3SiteStore(settings)
+vo_store = VOStore(settings)
 
 
 @asynccontextmanager
